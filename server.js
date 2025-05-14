@@ -67,7 +67,7 @@ app.use("/api/taskAchievements", taskAchieveRoutes);
 app.use("/api/todo",todosRoutes)
 app.use("/api/upload",uploadRoutes);
 app.use("/api/exam",examRoutes);
-app.use("/api/useeanswer",userAnswerRoutes);
+app.use("/api/useranswer",userAnswerRoutes);
 
 // Database connection
 mongoose.connect(process.env.MONGO_URI)
