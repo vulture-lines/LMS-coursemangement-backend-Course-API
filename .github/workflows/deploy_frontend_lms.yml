@@ -3,7 +3,7 @@ name: Deploy LMS Backend to EC2
 on:
   push:
     branches:
-      - main  # Change if your default branch is different
+      - main
 
 jobs:
   deploy:
@@ -18,16 +18,20 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
 
+      - name: Add GitHub to known_hosts
+        run: |
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+
       - name: Deploy to EC2
         run: |
           ssh -o StrictHostKeyChecking=no ubuntu@43.205.138.179 << 'EOF'
-            # Create backend directory
+            # Ensure directory exists
             sudo mkdir -p /var/www/html/LMS-Course-API
             sudo chown -R ubuntu:ubuntu /var/www/html/LMS-Course-API
 
             # Pull latest code
             if [ ! -d /var/www/html/LMS-Course-API/.git ]; then
-              git clone https://github.com/lms-course/LMS-Course-API.git /var/www/html/LMS-Course-API
+              git clone git@github.com:lms-course/LMS-Course-API.git /var/www/html/LMS-Course-API
             else
               cd /var/www/html/LMS-Course-API
               git pull origin main
@@ -38,5 +42,5 @@ jobs:
             npm install
 
             # Restart backend service
-            sudo systemctl restart lms-backend
+            sudo systemctl restart lms-backend || echo "Service not found (create it manually)"
           EOF
