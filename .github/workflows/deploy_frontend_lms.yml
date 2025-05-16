@@ -1,0 +1,42 @@
+name: Deploy LMS Backend to EC2
+
+on:
+  push:
+    branches:
+      - main  # Change if your default branch is different
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup SSH Agent
+        uses: webfactory/ssh-agent@v0.5.4
+        with:
+          ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
+
+      - name: Deploy to EC2
+        run: |
+          ssh -o StrictHostKeyChecking=no ubuntu@43.205.138.179 << 'EOF'
+            # Create backend directory
+            sudo mkdir -p /var/www/html/LMS-Course-API
+            sudo chown -R ubuntu:ubuntu /var/www/html/LMS-Course-API
+
+            # Pull latest code
+            if [ ! -d /var/www/html/LMS-Course-API/.git ]; then
+              git clone https://github.com/lms-course/LMS-Course-API.git /var/www/html/LMS-Course-API
+            else
+              cd /var/www/html/LMS-Course-API
+              git pull origin main
+            fi
+
+            # Install dependencies
+            cd /var/www/html/LMS-Course-API
+            npm install
+
+            # Restart backend service
+            sudo systemctl restart lms-backend
+          EOF
