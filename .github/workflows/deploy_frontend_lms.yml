@@ -20,7 +20,15 @@ jobs:
         username: ubuntu
         key: ${{ secrets.EC2_SSH_KEY }}
         script: |
-          echo "Navigating to deployment directory..."
+          echo "Updating packages and installing Node.js and PM2..."
+          sudo apt-get update
+          sudo apt-get install -y nodejs npm
+          sudo npm install -g pm2
+
+          echo "Fixing directory permissions..."
+          sudo mkdir -p /var/www/html
+          sudo chown -R ubuntu:ubuntu /var/www/html
+
           cd /var/www/html
 
           if [ ! -d "LMS-Course-API" ]; then
@@ -37,5 +45,10 @@ jobs:
           echo "Installing dependencies..."
           npm install
 
-          echo "Restarting backend with PM2..."
-          pm2 restart lms-backend || pm2 start index.js --name lms-backend
+          echo "Starting or restarting PM2 process..."
+          pm2 describe lms-backend > /dev/null
+          if [ $? -ne 0 ]; then
+            pm2 start index.js --name lms-backend
+          else
+            pm2 restart lms-backend
+          fi
