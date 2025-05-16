@@ -27,7 +27,7 @@ jobs:
 
             # Clone or update using SSH (must have SSH key on EC2)
             if [ ! -d /var/www/html/LMS-Course-API/.git ]; then
-              git clone git@github.com:<your-username>/LMS-Course-API.git /var/www/html/LMS-Course-API
+              git clone git@github.com:vulture-lines/LMS-Course-API.git /var/www/html/LMS-Course-API
             else
               cd /var/www/html/LMS-Course-API
               git reset --hard
