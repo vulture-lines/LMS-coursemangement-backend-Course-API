@@ -48,7 +48,7 @@ jobs:
           echo "Starting or restarting PM2 process..."
           pm2 describe lms-backend > /dev/null
           if [ $? -ne 0 ]; then
-            pm2 start index.js --name lms-backend
+            pm2 start server.js --name lms-backend
           else
             pm2 restart lms-backend
           fi
