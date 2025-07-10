@@ -8,20 +8,18 @@ const app = express();
 app.use(express.json());
 
 
-// const allowedOrigins = ["https://lms-course-sigma.vercel.app"];
-app.use(cors({ origin: "*", credentials: true }));
-// app.use(cors({
-//   origin: function (origin, callback) {
-//     // allow requests with no origin like mobile apps or curl
-//     if (!origin) return callback(null, true);
-//     if (allowedOrigins.includes(origin)) {
-//       return callback(null, true);
-//     } else {
-//       return callback(new Error("Not allowed by CORS"));
-//     }
-//   },
-//   credentials: true
-// }));
+const allowedOrigins = ["https://lms-course-sigma.vercel.app","https://lawcoach.in" ,"http://localhost:5173"];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("CORS Not Allowed"));
+    }
+  },
+  credentials: true
+}));
 
 
 const PORT = process.env.PORT || 5000;
