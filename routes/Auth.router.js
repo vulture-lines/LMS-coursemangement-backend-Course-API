@@ -92,7 +92,11 @@ router.post("/google", async (req, res) => {
   if (!code) return res.status(400).json({ error: "Missing code from frontend" });
 
   try {
-    const { tokens } = await client.getToken(code);
+    // const { tokens } = await client.getToken(code);  11/7/2025 changed 
+    const { tokens } = await client.getToken({
+      code,
+      redirect_uri: "https://lms-course-sigma.vercel.app"  
+    });
     const ticket = await client.verifyIdToken({
       idToken: tokens.id_token,
       audience: process.env.GOOGLE_CLIENT_ID,
