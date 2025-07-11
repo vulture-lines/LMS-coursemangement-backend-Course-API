@@ -95,7 +95,7 @@ router.post("/google", async (req, res) => {
     // const { tokens } = await client.getToken(code);  11/7/2025 changed 
     const { tokens } = await client.getToken({
       code,
-      redirect_uri: "https://lms-course-sigma.vercel.app"  
+      redirect_uri: "https://lawcoach.in"  
     });
     const ticket = await client.verifyIdToken({
       idToken: tokens.id_token,
