@@ -9,8 +9,8 @@ const authenticate = require("../middleware/auth");
 const sendWelcomeEmail = require("../middleware/mailer"); 
 const router = express.Router();
 const { OAuth2Client } = require("google-auth-library");
-// const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID, process.env.GOOGLE_CLIENT_SECRET, process.env.GOOGLE_REDIRECT_URI);
-const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID, process.env.GOOGLE_CLIENT_SECRET);
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID, process.env.GOOGLE_CLIENT_SECRET, process.env.GOOGLE_REDIRECT_URI);
+// const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID, process.env.GOOGLE_CLIENT_SECRET);
 
 
 let resetTokens = {}
@@ -93,11 +93,11 @@ router.post("/google", async (req, res) => {
   if (!code) return res.status(400).json({ error: "Missing code from frontend" });
 
   try {
-    // const { tokens } = await client.getToken(code);  11/7/2025 changed 
-    const { tokens } = await client.getToken({
-      code,
-      redirect_uri: "https://lawcoach.in"  
-    });
+    const { tokens } = await client.getToken(code); // 11/7/2025 changed 
+    // const { tokens } = await client.getToken({
+    //   code,
+    //   redirect_uri: "https://lawcoach.in"  
+    // });
     const ticket = await client.verifyIdToken({
       idToken: tokens.id_token,
       audience: process.env.GOOGLE_CLIENT_ID,
