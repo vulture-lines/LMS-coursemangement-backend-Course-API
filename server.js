@@ -8,7 +8,7 @@ const app = express();
 app.use(express.json());
 
 
-const allowedOrigins = ["https://lms-course-sigma.vercel.app","https://lawcoach.in" ,"http://localhost:5173"];
+const allowedOrigins = ["https://lms-course-sigma.vercel.app","https://lawcoach.in" ,"http://localhost:5173","http://43.205.228.201.nip.io"];
 
 app.use(cors({
   origin: function (origin, callback) {
